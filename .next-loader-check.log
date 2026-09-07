@@ -5,3 +5,18 @@
 ✓ Ready in 716ms
 ✓ Running next.config.ts took 50ms
 
+(node:9056) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ POST /api/auth/login 200 in 4.6s (next.js: 221ms, application-code: 4.4s)
+ GET /app/transactions 200 in 4.0s (next.js: 183ms, application-code: 3.8s)
+ GET /app/wallets 200 in 1063ms (next.js: 54ms, application-code: 1010ms)
+ GET /app/dashboard 200 in 1722ms (next.js: 68ms, application-code: 1654ms)
+ GET /app/wallets/929f2058-fa02-460e-8985-5c715feedc41 200 in 5.6s (next.js: 1703ms, application-code: 3.9s)
+ POST /api/demo/fund 200 in 2.4s (next.js: 362ms, application-code: 2.1s)

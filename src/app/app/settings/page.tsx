@@ -63,7 +63,7 @@ export default async function SettingsPage() {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Demo funding</span>
-            <span className="font-medium">{demoFundingEnabled() ? "Enabled (dev only)" : "Disabled"}</span>
+            <span className="font-medium">{demoFundingEnabled() ? "Enabled" : "Disabled"}</span>
           </div>
         </CardContent>
       </Card>

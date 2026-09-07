@@ -8,12 +8,13 @@ import { withAuthRoute } from "@/lib/route";
 export const runtime = "nodejs";
 
 /**
- * POST /api/demo/fund  (DEV-ONLY)
+ * POST /api/demo/fund
  *
  * Adds demo funds to one of the caller's wallets so the prototype is usable
- * without an external source of funds. Disabled in production — the endpoint
- * returns 404 when PEBBLE_ENABLE_DEMO_FUNDING is not "true". This is a
- * prototype convenience and NOT part of the transfer engine.
+ * without an external source of funds. Enabled by default (set
+ * PEBBLE_ENABLE_DEMO_FUNDING=false to disable) — when disabled the endpoint
+ * returns 404. This is a prototype convenience and NOT part of the transfer
+ * engine.
  */
 export async function POST(request: NextRequest) {
   return withAuthRoute(request, async (request, user, ctx) => {

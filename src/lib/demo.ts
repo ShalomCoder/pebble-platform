@@ -1,10 +1,9 @@
 /**
- * Demo funding (prototype only).
+ * Demo funding (prototype feature).
  *
- * This endpoint is a development convenience so the demo is usable without an
- * external source of funds. It is NOT part of the transaction engine and is
- * disabled in production. It performs a single atomic balance increment guarded
- * by the balance >= 0 check, and audits every deposit.
+ * Lets demo users top up a wallet without an external source of funds. Not
+ * part of the transaction engine. Enabled by default on every environment;
+ * set PEBBLE_ENABLE_DEMO_FUNDING=false to disable it.
  */
 import { sql } from "drizzle-orm";
 import { eq } from "drizzle-orm";
@@ -16,10 +15,9 @@ import { requireOwnedWallet } from "./wallets/service";
 import { AuditActions, writeAudit, type AuditContext } from "./audit";
 
 export function demoFundingEnabled(): boolean {
-  return (
-    process.env.NODE_ENV !== "production" &&
-    process.env.PEBBLE_ENABLE_DEMO_FUNDING === "true"
-  );
+  const value = process.env.PEBBLE_ENABLE_DEMO_FUNDING;
+  if (value === undefined) return true;
+  return value === "true";
 }
 
 const MAX_DEMO_DEPOSIT = 100_000_000_00; // 100,000 major units per deposit
@@ -32,7 +30,7 @@ export async function demoFundWallet(
   ctx: AuditContext = {},
 ): Promise<{ walletId: string; amountMinor: number; currency: string }> {
   if (!demoFundingEnabled()) {
-    // Pretend the endpoint does not exist in production.
+    // Pretend the endpoint does not exist when disabled.
     throw new AppError(404, ErrorCodes.WALLET_NOT_FOUND, "Not found.");
   }
 
