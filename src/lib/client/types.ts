@@ -11,8 +11,8 @@ export type SerializedTransaction = {
   status: TransactionStatus;
   memo: string | null;
   direction: TransactionDirection;
-  senderWallet: { id: string; address: string; name: string };
-  recipientWallet: { id: string; address: string; name: string };
+  senderWallet: { id: string; address: string; name: string; accountName: string };
+  recipientWallet: { id: string; address: string; name: string; accountName: string };
   createdAt: string;
   completedAt: string | null;
   failedAt: string | null;

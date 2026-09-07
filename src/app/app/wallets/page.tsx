@@ -2,6 +2,7 @@ import { requireAuth } from "@/lib/auth/session";
 import { requireAccountForUser } from "@/lib/accounts/service";
 import { listWalletsForAccount } from "@/lib/wallets/service";
 import { db } from "@/lib/db";
+import { demoFundingEnabled } from "@/lib/demo";
 import { clientWallet } from "@/lib/serialize";
 import { Card, CardContent } from "@/components/ui/card";
 import { CreateWalletDialog } from "@/components/create-wallet-form";
@@ -17,6 +18,7 @@ export default async function WalletsPage() {
   const account = await requireAccountForUser(db, user.id);
   const walletRows = await listWalletsForAccount(db, account.id);
   const wallets = walletRows.map(clientWallet);
+  const topUpEnabled = demoFundingEnabled();
 
   return (
     <div className="space-y-8">
@@ -41,7 +43,7 @@ export default async function WalletsPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {wallets.map((w, i) => (
-            <WalletCard key={w.id} wallet={w} index={i} />
+            <WalletCard key={w.id} wallet={w} index={i} topUpEnabled={topUpEnabled} />
           ))}
         </div>
       )}

@@ -6,12 +6,14 @@ import { requireAccountForUser } from "@/lib/accounts/service";
 import { requireOwnedWallet } from "@/lib/wallets/service";
 import { listTransactions } from "@/lib/transactions/service";
 import { db } from "@/lib/db";
+import { demoFundingEnabled } from "@/lib/demo";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Money, formatDate } from "@/components/money";
 import { CopyToClipboard } from "@/components/copy-button";
 import { TransactionStatusBadge } from "@/components/transaction-status-badge";
-import { clientTransaction } from "@/lib/serialize";
+import { TopUpDialog } from "@/components/top-up-dialog";
+import { clientTransaction, clientWallet } from "@/lib/serialize";
 import { walletSurfaceCss, walletSurfaceIndex } from "@/components/wallet-card";
 import { PebbleArc, PebbleBlob, PebbleDot } from "@/components/pebble-primitives";
 import { cn } from "cn";
@@ -82,6 +84,9 @@ export default async function WalletDetailPage({ params }: { params: Promise<{ i
 
           <div className="flex flex-wrap items-center gap-2">
             <CopyToClipboard value={wallet.address} label="Copy address" />
+            {demoFundingEnabled() && (
+              <TopUpDialog wallet={clientWallet(wallet)} trigger="outline" />
+            )}
             <Link href={`/app/send?from=${wallet.id}`} className={buttonVariants()}>
               <SendIcon />
               Send from this wallet
@@ -137,8 +142,8 @@ export default async function WalletDetailPage({ params }: { params: Promise<{ i
                         {self
                           ? `${tx.senderWallet.name} → ${tx.recipientWallet.name}`
                           : outgoing
-                            ? `To ${tx.recipientWallet.name}`
-                            : `From ${tx.senderWallet.name}`}
+                            ? `To ${tx.recipientWallet.accountName}`
+                            : `From ${tx.senderWallet.accountName}`}
                       </p>
                       <p className="truncate text-xs text-muted-foreground">{formatDate(tx.createdAt)}</p>
                     </div>

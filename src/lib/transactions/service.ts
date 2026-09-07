@@ -23,7 +23,7 @@
 import { and, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db, type TransactionDb } from "../db";
-import { transactions, wallets } from "../db/schema";
+import { accounts, transactions, users, wallets } from "../db/schema";
 import type { TransactionRow, WalletRow } from "../db/schema";
 import { isUniqueViolation, type DbClient } from "../db/client";
 import { AppError, ErrorCodes } from "../errors";
@@ -38,6 +38,10 @@ const MAX_MEMO_LENGTH = 140;
 
 const senderWallet = alias(wallets, "sender_wallet");
 const recipientWallet = alias(wallets, "recipient_wallet");
+const senderAccount = alias(accounts, "sender_account");
+const recipientAccount = alias(accounts, "recipient_account");
+const senderOwner = alias(users, "sender_owner");
+const recipientOwner = alias(users, "recipient_owner");
 
 export type TransferIntentInput = {
   reference: string;
@@ -75,6 +79,7 @@ const TX_SELECT = {
     name: senderWallet.name,
     currency: senderWallet.currency,
     status: senderWallet.status,
+    accountName: senderOwner.fullName,
   },
   recipient: {
     id: recipientWallet.id,
@@ -83,13 +88,16 @@ const TX_SELECT = {
     name: recipientWallet.name,
     currency: recipientWallet.currency,
     status: recipientWallet.status,
+    accountName: recipientOwner.fullName,
   },
 } as const;
 
+type WalletWithAccountName = WalletRow & { accountName: string };
+
 type TxWithWallets = {
   tx: TransactionRow;
-  sender: WalletRow;
-  recipient: WalletRow;
+  sender: WalletWithAccountName;
+  recipient: WalletWithAccountName;
 };
 
 export type SerializedTransaction = ReturnType<typeof serializeTransaction>;
@@ -115,11 +123,13 @@ export function serializeTransaction(viewerAccountId: string, row: TxWithWallets
       id: row.sender.id,
       address: row.sender.address,
       name: row.sender.name,
+      accountName: row.sender.accountName,
     },
     recipientWallet: {
       id: row.recipient.id,
       address: row.recipient.address,
       name: row.recipient.name,
+      accountName: row.recipient.accountName,
     },
     createdAt: row.tx.createdAt,
     completedAt: row.tx.completedAt,
@@ -135,6 +145,10 @@ async function loadTxWithWallets(client: DbClient, txId: string): Promise<TxWith
     .from(transactions)
     .innerJoin(senderWallet, eq(transactions.senderWalletId, senderWallet.id))
     .innerJoin(recipientWallet, eq(transactions.recipientWalletId, recipientWallet.id))
+    .innerJoin(senderAccount, eq(senderWallet.accountId, senderAccount.id))
+    .innerJoin(recipientAccount, eq(recipientWallet.accountId, recipientAccount.id))
+    .innerJoin(senderOwner, eq(senderAccount.userId, senderOwner.id))
+    .innerJoin(recipientOwner, eq(recipientAccount.userId, recipientOwner.id))
     .where(eq(transactions.id, txId))
     .limit(1);
   return rows[0] ? (rows[0] as unknown as TxWithWallets) : null;
@@ -452,6 +466,10 @@ export async function getActiveTransaction(
     .from(transactions)
     .innerJoin(senderWallet, eq(transactions.senderWalletId, senderWallet.id))
     .innerJoin(recipientWallet, eq(transactions.recipientWalletId, recipientWallet.id))
+    .innerJoin(senderAccount, eq(senderWallet.accountId, senderAccount.id))
+    .innerJoin(recipientAccount, eq(recipientWallet.accountId, recipientAccount.id))
+    .innerJoin(senderOwner, eq(senderAccount.userId, senderOwner.id))
+    .innerJoin(recipientOwner, eq(recipientAccount.userId, recipientOwner.id))
     .where(and(eq(transactions.accountId, accountId), inArray(transactions.status, ACTIVE_STATUSES)))
     .orderBy(desc(transactions.createdAt))
     .limit(1);
@@ -500,7 +518,11 @@ export async function listTransactions(
 
   const base = db.select(TX_SELECT).from(transactions)
     .innerJoin(senderWallet, eq(transactions.senderWalletId, senderWallet.id))
-    .innerJoin(recipientWallet, eq(transactions.recipientWalletId, recipientWallet.id));
+    .innerJoin(recipientWallet, eq(transactions.recipientWalletId, recipientWallet.id))
+    .innerJoin(senderAccount, eq(senderWallet.accountId, senderAccount.id))
+    .innerJoin(recipientAccount, eq(recipientWallet.accountId, recipientAccount.id))
+    .innerJoin(senderOwner, eq(senderAccount.userId, senderOwner.id))
+    .innerJoin(recipientOwner, eq(recipientAccount.userId, recipientOwner.id));
 
   const [{ total }] = await db
     .select({ total: sql<number>`count(*)::int` })
@@ -532,6 +554,10 @@ export async function getTransactionForAccount(
     .from(transactions)
     .innerJoin(senderWallet, eq(transactions.senderWalletId, senderWallet.id))
     .innerJoin(recipientWallet, eq(transactions.recipientWalletId, recipientWallet.id))
+    .innerJoin(senderAccount, eq(senderWallet.accountId, senderAccount.id))
+    .innerJoin(recipientAccount, eq(recipientWallet.accountId, recipientAccount.id))
+    .innerJoin(senderOwner, eq(senderAccount.userId, senderOwner.id))
+    .innerJoin(recipientOwner, eq(recipientAccount.userId, recipientOwner.id))
     .where(and(eq(transactions.id, txId), eq(transactions.accountId, accountId)))
     .limit(1);
   if (rows.length === 0) return null;

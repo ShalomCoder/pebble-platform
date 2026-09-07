@@ -12,7 +12,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Money, formatDate } from "@/components/money";
 import { CopyToClipboard } from "@/components/copy-button";
 import { TransactionStatusBadge } from "@/components/transaction-status-badge";
-import { DemoFunding } from "@/components/demo-funding";
 import { WalletCard } from "@/components/wallet-card";
 import { PebbleArc, PebbleBlob, PebbleDot } from "@/components/pebble-primitives";
 import { cn } from "cn";
@@ -139,13 +138,11 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {wallets.map((w, i) => (
-              <WalletCard key={w.id} wallet={w} index={i} />
+              <WalletCard key={w.id} wallet={w} index={i} topUpEnabled={demoFundingEnabled()} />
             ))}
           </div>
         )}
       </section>
-
-      {demoFundingEnabled() && <DemoFunding wallets={wallets} />}
 
       <section>
         <div className="mb-4 flex items-center justify-between">
@@ -195,8 +192,8 @@ export default async function DashboardPage() {
                         {self
                           ? `${tx.senderWallet.name} → ${tx.recipientWallet.name}`
                           : outgoing
-                            ? `To ${tx.recipientWallet.name}`
-                            : `From ${tx.senderWallet.name}`}
+                            ? `To ${tx.recipientWallet.accountName}`
+                            : `From ${tx.senderWallet.accountName}`}
                       </p>
                       <p className="truncate text-xs text-muted-foreground">{formatDate(tx.createdAt)}</p>
                     </div>
