@@ -86,8 +86,8 @@ export default async function TransactionDetailPage({
             {tx.direction === "self"
               ? `${tx.senderWallet.name} to ${tx.recipientWallet.name}`
               : tx.direction === "sent"
-                ? `Sent to ${tx.recipientWallet.name}`
-                : `Received from ${tx.senderWallet.name}`}
+                ? `Sent to ${tx.recipientWallet.accountName}`
+                : `Received from ${tx.senderWallet.accountName}`}
           </div>
         </div>
 
@@ -129,15 +129,19 @@ export default async function TransactionDetailPage({
             <div className="flex items-center justify-between gap-4">
               <dt className="text-muted-foreground">Sender</dt>
               <dd className="flex flex-wrap items-center justify-end gap-2">
-                {tx.senderWallet.name}
-                <span className="font-mono text-xs text-muted-foreground">{tx.senderWallet.address}</span>
+                {tx.senderWallet.accountName}
+                <span className="font-mono text-xs text-muted-foreground">
+                  {tx.senderWallet.name} · {tx.senderWallet.address}
+                </span>
               </dd>
             </div>
             <div className="flex items-center justify-between gap-4">
               <dt className="text-muted-foreground">Recipient</dt>
               <dd className="flex flex-wrap items-center justify-end gap-2">
-                {tx.recipientWallet.name}
-                <span className="font-mono text-xs text-muted-foreground">{tx.recipientWallet.address}</span>
+                {tx.recipientWallet.accountName}
+                <span className="font-mono text-xs text-muted-foreground">
+                  {tx.recipientWallet.name} · {tx.recipientWallet.address}
+                </span>
               </dd>
             </div>
             {tx.needsAcknowledgement && (

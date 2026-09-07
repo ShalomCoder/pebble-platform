@@ -104,8 +104,8 @@ export default async function TransactionsPage({
                       {self
                         ? `${tx.senderWallet.name} → ${tx.recipientWallet.name}`
                         : outgoing
-                          ? `To ${tx.recipientWallet.name}`
-                          : `From ${tx.senderWallet.name}`}
+                          ? `To ${tx.recipientWallet.accountName}`
+                          : `From ${tx.senderWallet.accountName}`}
                       {tx.memo ? (
                         <span className="ml-1.5 text-xs font-normal text-muted-foreground">· {tx.memo}</span>
                       ) : null}
