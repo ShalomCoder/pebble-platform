@@ -1,0 +1,385 @@
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://172.20.10.3:3001
+- Environments: .env
+✓ Ready in 1310ms
+✓ Running next.config.ts took 94ms
+
+○ Compiling /login ...
+ GET /login 200 in 9.2s (next.js: 7.1s, application-code: 2.1s)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/login" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="en"
+                          className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__varia..."
+-                         crxlauncher-bridged=""
+-                         crxlauncher=""
+                        >
+                  ...
+ 
+    at <unknown> (chrome-extension://kiilhncajadbgbmdbdcopdpnmdhlbdle/assets/js/content.js:13:96450)
+    at d (chrome-extension://kiilhncajadbgbmdbdcopdpnmdhlbdle/assets/js/content.js:13:96560)
+    at f (chrome-extension://kiilhncajadbgbmdbdcopdpnmdhlbdle/assets/js/content.js:13:96661) (chrome-extension://kiilhncajadbgbmdbdcopdpnmdhlbdle/assets/js/content.js:13:96450)
+(node:13716) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ POST /api/auth/login 200 in 5.1s (next.js: 435ms, application-code: 4.7s)
+ POST /api/auth/register 201 in 24.5s (next.js: 208ms, application-code: 24.2s)
+ GET /api/account 200 in 3.7s (next.js: 207ms, application-code: 3.4s)
+ POST /api/auth/login 200 in 3.8s (next.js: 6ms, application-code: 3.8s)
+ GET /app/dashboard 200 in 2.6s (next.js: 934ms, application-code: 1701ms)
+ GET /app/dashboard 200 in 4.1s (next.js: 9ms, application-code: 4.1s)
+ GET /api/transactions/active 200 in 1312ms (next.js: 362ms, application-code: 951ms)
+ GET /api/transactions/active 200 in 1003ms (next.js: 5ms, application-code: 998ms)
+ GET /api/transactions/active 200 in 981ms (next.js: 5ms, application-code: 976ms)
+ GET /api/transactions/active 200 in 998ms (next.js: 4ms, application-code: 994ms)
+ GET /api/transactions/active 200 in 988ms (next.js: 4ms, application-code: 984ms)
+ GET /api/transactions/active 200 in 977ms (next.js: 4ms, application-code: 973ms)
+ GET /api/transactions/active 200 in 990ms (next.js: 6ms, application-code: 985ms)
+ GET /api/transactions/active 200 in 978ms (next.js: 4ms, application-code: 974ms)
+ GET /api/transactions/active 200 in 1018ms (next.js: 5ms, application-code: 1013ms)
+ GET /api/transactions/active 200 in 989ms (next.js: 4ms, application-code: 986ms)
+ GET /api/transactions/active 200 in 993ms (next.js: 5ms, application-code: 988ms)
+ GET /api/transactions/active 200 in 990ms (next.js: 4ms, application-code: 986ms)
+ GET /api/transactions/active 200 in 997ms (next.js: 9ms, application-code: 987ms)
+ GET /api/transactions/active 200 in 980ms (next.js: 4ms, application-code: 975ms)
+ GET /api/transactions/active 200 in 988ms (next.js: 4ms, application-code: 984ms)
+ GET /api/transactions/active 200 in 969ms (next.js: 4ms, application-code: 964ms)
+ GET /api/transactions/active 200 in 1001ms (next.js: 4ms, application-code: 997ms)
+ GET /api/transactions/active 200 in 993ms (next.js: 4ms, application-code: 989ms)
+ GET /api/transactions/active 200 in 971ms (next.js: 5ms, application-code: 967ms)
+ GET /api/transactions/active 200 in 984ms (next.js: 4ms, application-code: 981ms)
+ GET /api/transactions/active 200 in 974ms (next.js: 4ms, application-code: 970ms)
+ GET /api/transactions/active 200 in 1002ms (next.js: 4ms, application-code: 998ms)
+ GET /api/transactions/active 200 in 978ms (next.js: 4ms, application-code: 974ms)
+ GET /api/transactions/active 200 in 986ms (next.js: 4ms, application-code: 982ms)
+ GET /api/transactions/active 200 in 1005ms (next.js: 4ms, application-code: 1000ms)
+ GET /api/transactions/active 200 in 987ms (next.js: 4ms, application-code: 983ms)
+ GET /api/transactions/active 200 in 983ms (next.js: 4ms, application-code: 979ms)
+ GET /api/transactions/active 200 in 1015ms (next.js: 4ms, application-code: 1011ms)
+ GET /api/transactions/active 200 in 1010ms (next.js: 4ms, application-code: 1006ms)
+ GET /api/transactions/active 200 in 987ms (next.js: 4ms, application-code: 984ms)
+ GET /api/transactions/active 200 in 982ms (next.js: 5ms, application-code: 977ms)
+ GET /api/transactions/active 200 in 959ms (next.js: 4ms, application-code: 955ms)
+ GET /api/transactions/active 200 in 971ms (next.js: 4ms, application-code: 967ms)
+ GET /api/transactions/active 200 in 979ms (next.js: 4ms, application-code: 976ms)
+ GET /api/transactions/active 200 in 981ms (next.js: 4ms, application-code: 977ms)
+ GET /api/transactions/active 200 in 983ms (next.js: 4ms, application-code: 980ms)
+ GET /api/transactions/active 200 in 1001ms (next.js: 4ms, application-code: 997ms)
+ GET /api/transactions/active 200 in 971ms (next.js: 5ms, application-code: 966ms)
+ GET /api/transactions/active 200 in 966ms (next.js: 3ms, application-code: 963ms)
+ GET /api/transactions/active 200 in 987ms (next.js: 3ms, application-code: 984ms)
+ GET /api/transactions/active 200 in 996ms (next.js: 3ms, application-code: 993ms)
+ GET /api/transactions/active 200 in 1021ms (next.js: 4ms, application-code: 1017ms)
+ GET /api/transactions/active 200 in 991ms (next.js: 4ms, application-code: 987ms)
+ GET /api/transactions/active 200 in 1000ms (next.js: 3ms, application-code: 997ms)
+ GET /api/transactions/active 200 in 961ms (next.js: 3ms, application-code: 958ms)
+ GET /api/transactions/active 200 in 1005ms (next.js: 4ms, application-code: 1001ms)
+ GET /api/transactions/active 200 in 1006ms (next.js: 4ms, application-code: 1002ms)
+ GET /api/transactions/active 200 in 960ms (next.js: 4ms, application-code: 956ms)
+ GET /api/transactions/active 200 in 978ms (next.js: 4ms, application-code: 974ms)
+ GET /api/transactions/active 200 in 989ms (next.js: 4ms, application-code: 985ms)
+ GET /api/transactions/active 200 in 973ms (next.js: 3ms, application-code: 970ms)
+ GET /api/transactions/active 200 in 990ms (next.js: 4ms, application-code: 986ms)
+ GET /api/transactions/active 200 in 979ms (next.js: 6ms, application-code: 973ms)
+ GET /api/transactions/active 200 in 979ms (next.js: 4ms, application-code: 975ms)
+ GET /api/transactions/active 200 in 983ms (next.js: 4ms, application-code: 979ms)
+ GET /api/transactions/active 200 in 1082ms (next.js: 4ms, application-code: 1078ms)
+ GET /api/transactions/active 200 in 3.7s (next.js: 4ms, application-code: 3.7s)
+ GET /api/transactions/active 200 in 3.4s (next.js: 3ms, application-code: 3.4s)
+ GET /api/transactions/active 200 in 3.5s (next.js: 6ms, application-code: 3.4s)
+ GET /api/transactions/active 200 in 3.4s (next.js: 5ms, application-code: 3.4s)
+ GET /api/transactions/active 200 in 3.4s (next.js: 4ms, application-code: 3.4s)
+ GET /api/transactions/active 200 in 3.5s (next.js: 5ms, application-code: 3.4s)
+ GET /api/transactions/active 200 in 3.4s (next.js: 5ms, application-code: 3.4s)
+ GET /api/transactions/active 200 in 3.7s (next.js: 5ms, application-code: 3.7s)
+✓ Compiled in 246ms
+✓ Compiled in 194ms
+ GET /api/transactions/active 200 in 3.4s (next.js: 4ms, application-code: 3.3s)
+✓ Compiled in 141ms
+⚠ Fast Refresh had to perform a full reload when ./src/components/ui/button.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /app/dashboard 200 in 4.3s (next.js: 27ms, application-code: 4.3s)
+ GET /app/dashboard 200 in 4.2s (next.js: 9ms, application-code: 4.2s)
+ GET /api/transactions/active 200 in 998ms (next.js: 11ms, application-code: 987ms)
+✓ Compiled in 352ms
+ GET /app/dashboard 200 in 1768ms (next.js: 35ms, application-code: 1733ms)
+✓ Compiled in 263ms
+ GET /api/transactions/active 200 in 965ms (next.js: 8ms, application-code: 958ms)
+ GET /app/dashboard 200 in 1703ms (next.js: 21ms, application-code: 1682ms)
+ GET /api/transactions/active 200 in 1012ms (next.js: 20ms, application-code: 992ms)
+ GET /api/transactions/active 200 in 986ms (next.js: 6ms, application-code: 981ms)
+ GET /api/transactions/active 200 in 966ms (next.js: 4ms, application-code: 961ms)
+ GET /api/transactions/active 200 in 968ms (next.js: 5ms, application-code: 963ms)
+ GET /api/transactions/active 200 in 959ms (next.js: 6ms, application-code: 952ms)
+ GET /api/transactions/active 200 in 963ms (next.js: 4ms, application-code: 959ms)
+ GET /api/transactions/active 200 in 969ms (next.js: 5ms, application-code: 964ms)
+ GET /api/transactions/active 200 in 975ms (next.js: 5ms, application-code: 970ms)
+ GET /api/transactions/active 200 in 964ms (next.js: 4ms, application-code: 959ms)
+ GET /api/transactions/active 200 in 953ms (next.js: 3ms, application-code: 949ms)
+ GET /api/transactions/active 200 in 974ms (next.js: 4ms, application-code: 970ms)
+ GET /api/transactions/active 200 in 970ms (next.js: 4ms, application-code: 966ms)
+ GET /api/transactions/active 200 in 960ms (next.js: 5ms, application-code: 955ms)
+ GET /api/transactions/active 200 in 987ms (next.js: 4ms, application-code: 982ms)
+ GET /api/transactions/active 200 in 983ms (next.js: 12ms, application-code: 971ms)
+ GET /api/transactions/active 200 in 969ms (next.js: 5ms, application-code: 964ms)
+ GET /api/transactions/active 200 in 3.6s (next.js: 4ms, application-code: 3.6s)
+ GET /app/dashboard 200 in 1686ms (next.js: 21ms, application-code: 1665ms)
+ GET /api/transactions/active 200 in 1390ms (next.js: 7ms, application-code: 1383ms)
+ GET /api/transactions/active 200 in 990ms (next.js: 7ms, application-code: 983ms)
+✓ Compiled in 169ms
+ GET /app/dashboard 200 in 4.1s (next.js: 21ms, application-code: 4.1s)
+ GET /api/transactions/active 200 in 1020ms (next.js: 9ms, application-code: 1011ms)
+ GET /api/transactions/active 200 in 954ms (next.js: 4ms, application-code: 951ms)
+ GET /app/dashboard 200 in 1681ms (next.js: 24ms, application-code: 1657ms)
+ GET /api/transactions/active 200 in 970ms (next.js: 6ms, application-code: 964ms)
+ GET /api/transactions/active 200 in 4.3s (next.js: 4ms, application-code: 4.3s)
+✓ Compiled in 164ms
+✓ Compiled in 187ms
+✓ Compiled in 126ms
+ GET /api/transactions/active 200 in 3.9s (next.js: 4ms, application-code: 3.9s)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 200 in 4.1s (next.js: 35ms, application-code: 4.1s)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 283ms
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 4.3s (next.js: 23ms, application-code: 4.3s)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 4.7s (next.js: 34ms, application-code: 4.6s)
+[browser] Uncaught ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>:1:18)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : (
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 5.2s (next.js: 72ms, application-code: 5.1s)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 1863ms (next.js: 41ms, application-code: 1822ms)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 4.3s (next.js: 40ms, application-code: 4.2s)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 4.3s (next.js: 39ms, application-code: 4.3s)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 4.2s (next.js: 32ms, application-code: 4.2s)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 1984ms (next.js: 32ms, application-code: 1952ms)
+⨯ ReferenceError: ArrowDownRightIcon is not defined
+    at eval (src\app\app\dashboard\page.tsx:186:26)
+    at Array.map (<anonymous>)
+    at DashboardPage (src\app\app\dashboard\page.tsx:166:28)
+  184 |                     >
+  185 |                       {self ? (
+> 186 |                         <ArrowDownRightIcon className="size-4" />
+      |                          ^
+  187 |                       ) : outgoing ? (
+  188 |                         <ArrowUpRightIcon className="size-4" />
+  189 |                       ) : ( {
+  digest: '1703637780'
+}
+ GET /app/dashboard 500 in 4.2s (next.js: 20ms, application-code: 4.1s)
+ GET /app/dashboard 200 in 4.6s (next.js: 99ms, application-code: 4.5s)
+ GET /api/transactions/active 200 in 1044ms (next.js: 11ms, application-code: 1033ms)
+ GET /api/transactions/active 200 in 974ms (next.js: 8ms, application-code: 967ms)
+ GET /api/transactions/active 200 in 1185ms (next.js: 10ms, application-code: 1175ms)
+ GET /api/transactions/active 200 in 1112ms (next.js: 22ms, application-code: 1090ms)
+ GET /api/transactions/active 200 in 1000ms (next.js: 7ms, application-code: 993ms)
+ GET /api/transactions/active 200 in 1011ms (next.js: 8ms, application-code: 1003ms)
+ GET /api/transactions/active 200 in 1057ms (next.js: 9ms, application-code: 1048ms)
+ GET /api/transactions/active 200 in 1092ms (next.js: 10ms, application-code: 1082ms)
+ GET /api/transactions/active 200 in 1084ms (next.js: 7ms, application-code: 1077ms)
+ GET /api/transactions/active 200 in 973ms (next.js: 6ms, application-code: 967ms)
+ GET /api/transactions/active 200 in 1025ms (next.js: 7ms, application-code: 1017ms)
+ GET /api/transactions/active 200 in 1073ms (next.js: 9ms, application-code: 1064ms)
+ GET /api/transactions/active 200 in 1618ms (next.js: 8ms, application-code: 1609ms)
+ GET /api/transactions/active 200 in 988ms (next.js: 7ms, application-code: 981ms)
+ GET /api/transactions/active 200 in 1013ms (next.js: 8ms, application-code: 1005ms)
+ GET /api/transactions/active 200 in 1005ms (next.js: 8ms, application-code: 997ms)
+ GET /api/transactions/active 200 in 1028ms (next.js: 11ms, application-code: 1017ms)
+ GET /api/transactions/active 200 in 1035ms (next.js: 8ms, application-code: 1027ms)
+✓ Compiled in 229ms
+⚠ Fast Refresh had to perform a full reload when ./src/components/transaction-monitor.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /api/transactions/active 200 in 4.3s (next.js: 9ms, application-code: 4.3s)
+ GET /app/dashboard 200 in 5.6s (next.js: 13ms, application-code: 5.6s)
+ GET /app/dashboard 200 in 5.7s (next.js: 32ms, application-code: 5.7s)
+ GET /api/transactions/active 200 in 1480ms (next.js: 26ms, application-code: 1453ms)
+ GET /api/transactions/active 200 in 1026ms (next.js: 7ms, application-code: 1019ms)
+ GET /api/transactions/active 200 in 1024ms (next.js: 8ms, application-code: 1017ms)
+ GET /api/transactions/active 200 in 1019ms (next.js: 6ms, application-code: 1012ms)
+ GET /api/transactions/active 200 in 1004ms (next.js: 6ms, application-code: 998ms)
+ GET /api/transactions/active 200 in 1153ms (next.js: 26ms, application-code: 1127ms)
+ GET /api/transactions/active 200 in 1015ms (next.js: 6ms, application-code: 1009ms)
+ GET /api/transactions/active 200 in 5.0s (next.js: 8ms, application-code: 5.0s)
+ GET /api/transactions/active 200 in 3.6s (next.js: 7ms, application-code: 3.6s)
+ GET /api/transactions/active 200 in 1767ms (next.js: 7ms, application-code: 1759ms)
+ GET /api/transactions/active 200 in 1777ms (next.js: 7ms, application-code: 1770ms)
+ GET /api/transactions/active 200 in 2.7s (next.js: 7ms, application-code: 2.6s)
+ GET /api/transactions/active 200 in 1267ms (next.js: 5ms, application-code: 1262ms)
+ GET /api/transactions/active 200 in 3.2s (next.js: 6ms, application-code: 3.2s)
+ GET /api/transactions/active 200 in 1067ms (next.js: 7ms, application-code: 1060ms)
+ GET /api/transactions/active 200 in 1124ms (next.js: 7ms, application-code: 1117ms)
+ GET /api/transactions/active 200 in 1043ms (next.js: 6ms, application-code: 1037ms)
+ GET /api/transactions/active 200 in 1043ms (next.js: 5ms, application-code: 1038ms)
+ GET / 200 in 1155ms (next.js: 908ms, application-code: 247ms)
+ GET /login 200 in 280ms (next.js: 44ms, application-code: 236ms)
+ GET /register 200 in 1193ms (next.js: 893ms, application-code: 300ms)
+ GET /api/transactions/active 200 in 3.5s (next.js: 21ms, application-code: 3.5s)
+ POST /api/auth/login 200 in 3.9s (next.js: 19ms, application-code: 3.8s)
+ GET /app/dashboard 200 in 1925ms (next.js: 22ms, application-code: 1903ms)
+ GET /app/wallets 200 in 2.6s (next.js: 1158ms, application-code: 1441ms)
+ GET /app/send 200 in 1847ms (next.js: 705ms, application-code: 1141ms)
+ GET /app/transactions 200 in 4.8s (next.js: 866ms, application-code: 3.9s)
+ GET /app/cards 200 in 2.4s (next.js: 1151ms, application-code: 1212ms)
+ GET /app/settings 200 in 1265ms (next.js: 478ms, application-code: 786ms)
+ GET /app/dashboard 200 in 4.5s (next.js: 50ms, application-code: 4.4s)
+ GET /api/transactions/active 200 in 3.5s (next.js: 18ms, application-code: 3.5s)
+ GET /app/dashboard 200 in 4.5s (next.js: 11ms, application-code: 4.5s)
+ GET /api/transactions/active 200 in 3.5s (next.js: 6ms, application-code: 3.5s)
+ GET /api/transactions/active 200 in 3.5s (next.js: 6ms, application-code: 3.5s)
+ GET /api/transactions/active 200 in 3.4s (next.js: 7ms, application-code: 3.4s)
+ GET /api/transactions/active 200 in 3.7s (next.js: 8ms, application-code: 3.7s)
+ GET /api/transactions/active 200 in 3.4s (next.js: 6ms, application-code: 3.4s)

@@ -1,69 +1,141 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRightIcon, ShieldCheckIcon, WalletCardsIcon, ZapIcon } from "lucide-react";
+import { getCurrentUser } from "@/lib/auth/session";
+import { buttonVariants } from "@/components/ui/button";
+import { PebbleArc, PebbleBlob, PebbleDot } from "@/components/pebble-primitives";
 
-export default function Home() {
+export const metadata = {
+  title: "Digital money for everyday life",
+};
+
+function PebbleLogo({ className }: { className?: string }) {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <span className={`flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground pebble-shadow ${className ?? ""}`}>
+      <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="4" cy="11" r="1.3" fill="currentColor" />
+        <circle cx="8.5" cy="4.5" r="1.8" fill="currentColor" opacity="0.9" />
+        <circle cx="12" cy="10" r="1.4" fill="currentColor" opacity="0.8" />
+      </svg>
+    </span>
+  );
+}
+
+export default async function LandingPage() {
+  const user = await getCurrentUser();
+
+  const features = [
+    {
+      icon: ZapIcon,
+      title: "Instant transfers",
+      copy: "Send money by wallet address. Settles in milliseconds.",
+    },
+    {
+      icon: WalletCardsIcon,
+      title: "Virtual cards",
+      copy: "Cards for every wallet, with a modern Interface.",
+    },
+    {
+      icon: ShieldCheckIcon,
+      title: "Audited by design",
+      copy: "Every move is an explicit, idempotent, auditable transaction.",
+    },
+    {
+      icon: ShieldCheckIcon,
+      title: "Your money, your control",
+      copy: "No hidden balances. What you see is exactly what you have.",
+    },
+  ];
+
+  return (
+    <div className="flex min-h-dvh flex-col overflow-x-clip">
+      <header className="border-b border-border/60 bg-background/70 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2.5 font-heading font-semibold tracking-tight">
+            <PebbleLogo />
+            Pebble
+          </Link>
+          <nav className="flex items-center gap-2">
+            {user ? (
+              <Link href="/app/dashboard" className={buttonVariants()}>
+                Open dashboard <ArrowRightIcon data-icon="inline-end" />
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" className={buttonVariants({ variant: "ghost" })}>
+                  Log in
+                </Link>
+                <Link href="/register" className={buttonVariants()}>
+                  Create account <ArrowRightIcon data-icon="inline-end" />
+                </Link>
+              </>
+            )}
+          </nav>
+        </div>
+      </header>
+
+      <main className="relative mx-auto w-full max-w-5xl flex-1 px-6">
+        <PebbleArc
+          size={360}
+          strokeWidth={40}
+          sweep={120}
+          rotation={190}
+          className="pointer-events-none absolute -top-6 right-0 text-pebble-light/70 sm:-top-16 sm:-right-16"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+        <PebbleBlob size={300} className="pointer-events-none absolute top-40 -left-32 text-pebble/10" />
+        <PebbleDot size={12} className="pointer-events-none absolute top-28 left-1/2 bg-pebble-light" />
+        <PebbleDot size={6} className="pointer-events-none absolute -top-2 left-[60%] bg-pebble/30" />
+
+        <section className="relative grid items-center gap-12 py-16 sm:py-24 lg:grid-cols-2">
+          <div>
+            <h1 className="font-heading text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+              Digital money for{" "}
+              <span className="text-pebble-dark">everyday life</span>.
+            </h1>
+            <p className="mt-4 max-w-md text-muted-foreground">
+              Wallets that settle instantly, transfers between friends in
+              milliseconds, and virtual cards you can spend with — all from one
+              account.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              {user ? (
+                <Link href="/app/dashboard" className={buttonVariants({ size: "lg" })}>
+                  Go to your dashboard <ArrowRightIcon data-icon="inline-end" />
+                </Link>
+              ) : (
+                <>
+                  <Link href="/register" className={buttonVariants({ size: "lg" })}>
+                    Open a free account <ArrowRightIcon data-icon="inline-end" />
+                  </Link>
+                  <Link href="/login" className={buttonVariants({ variant: "outline", size: "lg" })}>
+                    Log in
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {features.map(({ icon: Icon, title, copy }, i) => (
+              <div
+                key={title}
+                className="relative overflow-hidden rounded-2xl bg-card p-5 pebble-shadow ring-1 ring-foreground/5"
+              >
+                <PebbleDot size={5} className={`absolute ${i % 2 === 0 ? "top-4 right-5" : "bottom-4 left-5"} bg-pebble/30`} />
+                <Icon className="size-5 text-primary" />
+                <h3 className="mt-3 font-heading font-medium">{title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{copy}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
+
+      <footer className="border-t border-border/60">
+        <div className="mx-auto w-full max-w-5xl px-6 py-6 text-sm text-muted-foreground">
+          Pebble is a prototype build for demonstration and learning. It is not
+          a regulated financial institution.
+        </div>
+      </footer>
     </div>
   );
 }
