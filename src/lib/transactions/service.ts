@@ -494,7 +494,14 @@ export async function listTransactions(
   const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
   const offset = (page - 1) * pageSize;
 
-  const conditions = [eq(transactions.accountId, accountId)];
+  // A transaction involves this account when it is the sender OR the recipient
+  // (transactions.accountId always stores the sender/initiating account).
+  const conditions = [
+    or(
+      eq(senderWallet.accountId, accountId),
+      eq(recipientWallet.accountId, accountId),
+    )!,
+  ];
   if (filters.status) {
     conditions.push(eq(transactions.status, filters.status));
   }
@@ -527,6 +534,8 @@ export async function listTransactions(
   const [{ total }] = await db
     .select({ total: sql<number>`count(*)::int` })
     .from(transactions)
+    .innerJoin(senderWallet, eq(transactions.senderWalletId, senderWallet.id))
+    .innerJoin(recipientWallet, eq(transactions.recipientWalletId, recipientWallet.id))
     .where(and(...conditions));
 
   const rows = await base
@@ -558,7 +567,15 @@ export async function getTransactionForAccount(
     .innerJoin(recipientAccount, eq(recipientWallet.accountId, recipientAccount.id))
     .innerJoin(senderOwner, eq(senderAccount.userId, senderOwner.id))
     .innerJoin(recipientOwner, eq(recipientAccount.userId, recipientOwner.id))
-    .where(and(eq(transactions.id, txId), eq(transactions.accountId, accountId)))
+    .where(
+      and(
+        eq(transactions.id, txId),
+        or(
+          eq(senderWallet.accountId, accountId),
+          eq(recipientWallet.accountId, accountId),
+        )!,
+      ),
+    )
     .limit(1);
   if (rows.length === 0) return null;
   return serializeTransaction(accountId, rows[0] as unknown as TxWithWallets);
@@ -575,12 +592,22 @@ export async function acknowledgeTransaction(
 ): Promise<SerializedTransaction> {
   const result = await db.transaction(async (tx: TransactionDb) => {
     const rows = await tx
-      .select()
+      .select({ transaction: transactions })
       .from(transactions)
-      .where(and(eq(transactions.id, txId), eq(transactions.accountId, accountId)))
+      .innerJoin(senderWallet, eq(transactions.senderWalletId, senderWallet.id))
+      .innerJoin(recipientWallet, eq(transactions.recipientWalletId, recipientWallet.id))
+      .where(
+        and(
+          eq(transactions.id, txId),
+          or(
+            eq(senderWallet.accountId, accountId),
+            eq(recipientWallet.accountId, accountId),
+          )!,
+        ),
+      )
       .limit(1)
       .for("update");
-    const txn = rows[0] ?? null;
+    const txn = rows[0]?.transaction ?? null;
     if (!txn) {
       throw new AppError(404, ErrorCodes.TRANSACTION_NOT_FOUND, "Transaction not found.");
     }
