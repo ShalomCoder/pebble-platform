@@ -28,9 +28,11 @@ const QUICK_AMOUNTS = [50, 100, 250];
 export function TopUpDialog({
   wallet,
   trigger = "ghost",
+  triggerClassName,
 }: {
   wallet: SerializedWallet;
   trigger?: "outline" | "ghost";
+  triggerClassName?: string;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -76,7 +78,7 @@ export function TopUpDialog({
     <Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : reset())}>
       <DialogTrigger
         render={
-          <Button variant={trigger} size="sm" type="button" className={trigger === "outline" ? "bg-card/70" : undefined}>
+          <Button variant={trigger} size="lg" type="button" className={cn(trigger === "outline" ? "bg-card/70" : undefined, triggerClassName)}>
             <PlusIcon />
             Top up
           </Button>

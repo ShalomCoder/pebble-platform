@@ -67,7 +67,12 @@ export default async function DashboardPage() {
           {main && (
             <>
               <div className="max-w-xl">
-                <p className="text-sm font-medium text-pebble-dark/70">{main.name}</p>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <p className="text-sm font-medium text-pebble-dark/70">Main wallet</p>
+                  <span className="truncate rounded-full bg-card/70 px-3 py-1 pebble-shadow font-mono text-xs font-medium tabular-nums text-pebble-dark/70 ring-1 ring-pebble-light/40">
+                    {main.address}
+                  </span>
+                </div>
                 <div className="mt-2 flex items-baseline gap-2">
                   <Money
                     amountMinor={main.balance}
@@ -78,20 +83,27 @@ export default async function DashboardPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-card/70 px-3 py-1.5 pebble-shadow ring-1 ring-pebble-light/40">
-                    <span className="font-mono text-sm font-medium tabular-nums">{main.address}</span>
-                  </span>
-                  <CopyToClipboard value={main.address} label="Copy" />
-                </div>
-                <div className="flex gap-2">
-                  {topUpEnabled && <TopUpDialog wallet={main} trigger="outline" />}
-                  <Link href={`/app/send?from=${main.id}`} className={buttonVariants()}>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="grid shrink-0 grid-cols-2 gap-3 sm:flex sm:gap-3">
+                  {topUpEnabled && (
+                    <TopUpDialog
+                      wallet={main}
+                      trigger="outline"
+                      triggerClassName="h-12 w-full px-3 sm:w-40"
+                    />
+                  )}
+                  <Link
+                    href={`/app/send?from=${main.id}`}
+                    className={cn(
+                      buttonVariants({ size: "lg" }),
+                      "h-12 w-full px-3 sm:w-40",
+                    )}
+                  >
                     <SendIcon />
                     Send money
                   </Link>
                 </div>
+                <CopyToClipboard value={main.address} label="Copy address" />
               </div>
             </>
           )}
