@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { wallets } from "../db/schema";
 import type { WalletRow } from "../db/schema";
 import { isUniqueViolation, type DbClient } from "../db/client";
@@ -58,6 +58,20 @@ export async function listWalletsForAccount(
     .from(wallets)
     .where(and(eq(wallets.accountId, accountId), eq(wallets.status, "ACTIVE")))
     .orderBy(desc(wallets.createdAt));
+}
+
+/** The account's main wallet: the first one ever created (set up at signup). */
+export async function getMainWalletForAccount(
+  client: DbClient,
+  accountId: string,
+): Promise<WalletRow | null> {
+  const rows = await client
+    .select()
+    .from(wallets)
+    .where(and(eq(wallets.accountId, accountId), eq(wallets.status, "ACTIVE")))
+    .orderBy(asc(wallets.createdAt))
+    .limit(1);
+  return rows[0] ?? null;
 }
 
 /** Loads a wallet that must belong to the given account. Returns null otherwise. */

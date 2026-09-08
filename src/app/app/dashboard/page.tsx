@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ArrowDownLeftIcon, ArrowDownRightIcon, ArrowUpRightIcon, PlusIcon, SendIcon } from "lucide-react";
+import { ArrowDownLeftIcon, ArrowDownRightIcon, ArrowUpRightIcon, SendIcon } from "lucide-react";
 import { requireAuth } from "@/lib/auth/session";
 import { requireAccountForUser } from "@/lib/accounts/service";
-import { listWalletsForAccount } from "@/lib/wallets/service";
+import { getMainWalletForAccount, listWalletsForAccount } from "@/lib/wallets/service";
 import { listTransactions } from "@/lib/transactions/service";
 import { db } from "@/lib/db";
 import { demoFundingEnabled } from "@/lib/demo";
@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Money, formatDate } from "@/components/money";
 import { CopyToClipboard } from "@/components/copy-button";
 import { TransactionStatusBadge } from "@/components/transaction-status-badge";
+import { TopUpDialog } from "@/components/top-up-dialog";
 import { WalletCard } from "@/components/wallet-card";
 import { PebbleArc, PebbleBlob, PebbleDot } from "@/components/pebble-primitives";
 import { cn } from "cn";
@@ -24,17 +25,12 @@ export default async function DashboardPage() {
   const user = await requireAuth();
   const account = await requireAccountForUser(db, user.id);
   const walletRows = await listWalletsForAccount(db, account.id);
+  const mainRow = await getMainWalletForAccount(db, account.id);
   const recent = await listTransactions(account.id, { page: 1, pageSize: 6 });
   const wallets = walletRows.map(clientWallet);
+  const main = mainRow ? clientWallet(mainRow) : null;
   const recentItems = recent.items.map(clientTransaction);
-
-  const totalsByCurrency = new Map<string, number>();
-  for (const w of wallets) {
-    totalsByCurrency.set(w.currency, (totalsByCurrency.get(w.currency) ?? 0) + w.balance);
-  }
-  const currencies = [...totalsByCurrency.entries()];
-  const primary = currencies[0];
-  const rest = currencies.slice(1);
+  const topUpEnabled = demoFundingEnabled();
 
   return (
     <div className="space-y-8">
@@ -68,53 +64,46 @@ export default async function DashboardPage() {
         />
 
         <div className="relative flex flex-col gap-7 p-6 sm:p-9">
-          <div className="max-w-xl">
-            <p className="text-sm font-medium text-pebble-dark/70">Total balance</p>
-            {primary && (
-              <div className="mt-2 flex items-baseline gap-2">
-                <Money
-                  amountMinor={primary[1]}
-                  currency={primary[0]}
-                  className="text-4xl leading-none font-semibold tracking-tight text-pebble-dark sm:text-5xl"
-                />
-                <span className="text-base font-medium text-pebble-dark/50">{primary[0]}</span>
+          {main && (
+            <>
+              <div className="max-w-xl">
+                <p className="text-sm font-medium text-pebble-dark/70">{main.name}</p>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <Money
+                    amountMinor={main.balance}
+                    currency={main.currency}
+                    className="text-4xl leading-none font-semibold tracking-tight text-pebble-dark sm:text-5xl"
+                  />
+                  <span className="text-base font-medium text-pebble-dark/50">{main.currency}</span>
+                </div>
               </div>
-            )}
-            {rest.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1">
-                {rest.map(([currency, total]) => (
-                  <div key={currency} className="flex items-baseline gap-1.5">
-                    <Money
-                      amountMinor={total}
-                      currency={currency}
-                      className="text-lg font-medium tabular-nums text-pebble-dark/90"
-                    />
-                    <span className="text-xs text-pebble-dark/50">{currency}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-card/70 px-3 py-1.5 pebble-shadow ring-1 ring-pebble-light/40">
-                <span className="text-xs text-muted-foreground">Code </span>
-                <span className="font-mono text-sm font-medium tabular-nums">{account.publicCode}</span>
-              </span>
-              <CopyToClipboard value={account.publicCode} label="Copy" />
-            </div>
-            <div className="flex gap-2">
-              <Link href="/app/wallets" className={buttonVariants({ variant: "outline" })}>
-                <PlusIcon />
-                Add wallet
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-card/70 px-3 py-1.5 pebble-shadow ring-1 ring-pebble-light/40">
+                    <span className="font-mono text-sm font-medium tabular-nums">{main.address}</span>
+                  </span>
+                  <CopyToClipboard value={main.address} label="Copy" />
+                </div>
+                <div className="flex gap-2">
+                  {topUpEnabled && <TopUpDialog wallet={main} trigger="outline" />}
+                  <Link href={`/app/send?from=${main.id}`} className={buttonVariants()}>
+                    <SendIcon />
+                    Send money
+                  </Link>
+                </div>
+              </div>
+            </>
+          )}
+
+          {!main && (
+            <div className="flex min-h-40 flex-col items-center justify-center gap-2 text-center">
+              <p className="text-sm text-pebble-dark/70">No wallet yet.</p>
+              <Link href="/app/wallets" className="text-sm text-primary hover:underline">
+                Create your first wallet
               </Link>
-              <Link href="/app/send" className={buttonVariants()}>
-                <SendIcon />
-                Send money
-              </Link>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -138,7 +127,7 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {wallets.map((w, i) => (
-              <WalletCard key={w.id} wallet={w} index={i} topUpEnabled={demoFundingEnabled()} />
+              <WalletCard key={w.id} wallet={w} index={i} topUpEnabled={topUpEnabled} />
             ))}
           </div>
         )}

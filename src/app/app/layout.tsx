@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { requireAuth } from "@/lib/auth/session";
 import { AppSidebar } from "@/components/app-sidebar";
 import { MobileNav } from "@/components/mobile-nav";
+import { PebbleLogo } from "@/components/pebble-logo";
 import { LogoutButton } from "@/components/logout-button";
 import { TransactionMonitor } from "@/components/transaction-monitor";
 
@@ -24,8 +25,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         </aside>
         <div className="flex min-w-0 flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background/70 px-4 backdrop-blur-md lg:px-8">
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-3">
               <MobileNav email={user.email} />
+              <PebbleLogo className="shrink-0 lg:hidden" />
               <p className="hidden text-sm text-muted-foreground sm:block">
                 Signed in as <span className="font-medium text-foreground">{user.fullName}</span>
               </p>

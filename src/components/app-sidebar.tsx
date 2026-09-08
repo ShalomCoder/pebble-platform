@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { PebbleArc, PebbleDot } from "@/components/pebble-primitives";
+import { PebbleLogo } from "@/components/pebble-logo";
 
 const NAV_ITEMS = [
   { href: "/app/dashboard", label: "Dashboard", icon: LayoutDashboardIcon },
@@ -46,22 +47,7 @@ export function AppSidebar({
         className="pointer-events-none absolute top-3 right-4 bg-pebble-light"
       />
 
-      <Link
-        href="/app/dashboard"
-        onClick={onNavigate}
-        className="relative flex items-center gap-2.5 px-2 py-1.5"
-      >
-        <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground pebble-shadow">
-          <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle cx="4" cy="11" r="1.3" fill="currentColor" />
-            <circle cx="8.5" cy="4.5" r="1.8" fill="currentColor" opacity="0.9" />
-            <circle cx="12" cy="10" r="1.4" fill="currentColor" opacity="0.8" />
-          </svg>
-        </span>
-        <span className="font-heading text-[1.05rem] font-semibold tracking-tight">
-          Pebble
-        </span>
-      </Link>
+      <PebbleLogo onClick={onNavigate} className="relative px-2 py-1.5" />
 
       <nav className="relative mt-5 flex flex-col gap-1">
         {NAV_ITEMS.map((item) => {
