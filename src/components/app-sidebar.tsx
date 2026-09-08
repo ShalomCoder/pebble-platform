@@ -23,7 +23,13 @@ const NAV_ITEMS = [
   { href: "/app/settings", label: "Settings", icon: SettingsIcon },
 ];
 
-export function AppSidebar({ email }: { email: string }) {
+export function AppSidebar({
+  email,
+  onNavigate,
+}: {
+  email: string;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
@@ -42,6 +48,7 @@ export function AppSidebar({ email }: { email: string }) {
 
       <Link
         href="/app/dashboard"
+        onClick={onNavigate}
         className="relative flex items-center gap-2.5 px-2 py-1.5"
       >
         <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground pebble-shadow">
@@ -64,6 +71,7 @@ export function AppSidebar({ email }: { email: string }) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onNavigate}
               className={cn(
                 buttonVariants({ variant: active ? "secondary" : "ghost" }),
                 "justify-start gap-2.5 rounded-lg",

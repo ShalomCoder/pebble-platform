@@ -20,3 +20,4 @@ See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode de
  GET /app/dashboard 200 in 1722ms (next.js: 68ms, application-code: 1654ms)
  GET /app/wallets/929f2058-fa02-460e-8985-5c715feedc41 200 in 5.6s (next.js: 1703ms, application-code: 3.9s)
  POST /api/demo/fund 200 in 2.4s (next.js: 362ms, application-code: 2.1s)
+[?25h
