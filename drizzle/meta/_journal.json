@@ -8,6 +8,13 @@
       "when": 1788781636689,
       "tag": "0000_striped_firestar",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788853273253,
+      "tag": "0001_lethal_shockwave",
+      "breakpoints": true
     }
   ]
 }

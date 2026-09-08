@@ -16,6 +16,7 @@ export type SerializedTransaction = {
   createdAt: string;
   completedAt: string | null;
   failedAt: string | null;
+  failedReason: string | null;
   completionAcknowledgedAt: string | null;
   needsAcknowledgement: boolean;
 };

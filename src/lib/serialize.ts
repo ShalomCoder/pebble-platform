@@ -43,6 +43,7 @@ export function clientTransaction(tx: ServerTx): SerializedTransaction {
     createdAt: toIso(tx.createdAt),
     completedAt: tx.completedAt ? toIso(tx.completedAt) : null,
     failedAt: tx.failedAt ? toIso(tx.failedAt) : null,
+    failedReason: tx.failedReason,
     completionAcknowledgedAt: tx.completionAcknowledgedAt ? toIso(tx.completionAcknowledgedAt) : null,
     needsAcknowledgement: tx.needsAcknowledgement,
   };

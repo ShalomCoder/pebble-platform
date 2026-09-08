@@ -17,6 +17,18 @@ export const metadata = { title: "Transaction" };
 
 export const dynamic = "force-dynamic";
 
+const FAILURE_REASON_LABEL: Record<string, string> = {
+  INSUFFICIENT_FUNDS: "Insufficient funds in the sender wallet.",
+  WALLET_INACTIVE: "The sender or recipient wallet is no longer active.",
+  CURRENCY_MISMATCH: "The sender and recipient wallets use different currencies.",
+  NETWORK: "The transfer could not be completed. Please try again.",
+};
+
+function failureReasonMessage(reason: string | null): string | null {
+  if (!reason) return null;
+  return FAILURE_REASON_LABEL[reason] ?? reason;
+}
+
 function StatusOrbit({ status }: { status: TransactionStatus }) {
   const settled = status === "COMPLETED";
   const failed = status === "FAILED" || status === "CANCELLED";
@@ -110,6 +122,11 @@ export default async function TransactionDetailPage({
               <dt className="text-muted-foreground">Status</dt>
               <dd className="capitalize">{tx.status.toLowerCase()}</dd>
             </div>
+            {tx.status === "FAILED" && failureReasonMessage(tx.failedReason) && (
+              <div className="rounded-lg bg-rose-500/10 p-3 text-sm text-rose-700 ring-1 ring-rose-500/20 dark:text-rose-300">
+                {failureReasonMessage(tx.failedReason)}
+              </div>
+            )}
             <div className="flex items-center justify-between gap-4">
               <dt className="text-muted-foreground">Created</dt>
               <dd>{formatDate(tx.createdAt)}</dd>

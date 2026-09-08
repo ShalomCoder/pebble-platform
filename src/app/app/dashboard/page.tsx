@@ -14,6 +14,7 @@ import { CopyToClipboard } from "@/components/copy-button";
 import { TransactionStatusBadge } from "@/components/transaction-status-badge";
 import { TopUpDialog } from "@/components/top-up-dialog";
 import { WalletCard } from "@/components/wallet-card";
+import { FailedTransactionAlert } from "@/components/failed-transaction-alert";
 import { PebbleArc, PebbleBlob, PebbleDot } from "@/components/pebble-primitives";
 import { cn } from "cn";
 
@@ -44,6 +45,8 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
+
+      <FailedTransactionAlert hasFailed={recent.items[0]?.status === "FAILED"} latest={recent.items[0]} />
 
       <section className="relative overflow-hidden rounded-[1.75rem] bg-pebble-light/60 pebble-inset ring-1 ring-pebble-light">
         <PebbleArc

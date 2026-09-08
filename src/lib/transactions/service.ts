@@ -70,6 +70,7 @@ const TX_SELECT = {
     createdAt: transactions.createdAt,
     completedAt: transactions.completedAt,
     failedAt: transactions.failedAt,
+    failedReason: transactions.failedReason,
     completionAcknowledgedAt: transactions.completionAcknowledgedAt,
   },
   sender: {
@@ -134,6 +135,7 @@ export function serializeTransaction(viewerAccountId: string, row: TxWithWallets
     createdAt: row.tx.createdAt,
     completedAt: row.tx.completedAt,
     failedAt: row.tx.failedAt,
+    failedReason: row.tx.failedReason ?? null,
     completionAcknowledgedAt: row.tx.completionAcknowledgedAt,
     needsAcknowledgement: row.tx.status === TERMINAL_SUCCESS && row.tx.completionAcknowledgedAt === null,
   };
@@ -446,7 +448,7 @@ export async function markTransactionFailed(
 
     await tx
       .update(transactions)
-      .set({ status: TERMINAL_FAILURE, failedAt: new Date() })
+      .set({ status: TERMINAL_FAILURE, failedAt: new Date(), failedReason: reason })
       .where(eq(transactions.id, txn.id));
 
     await writeAudit(tx, AuditActions.transaction_failure, ctx, {

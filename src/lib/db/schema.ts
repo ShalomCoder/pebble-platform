@@ -123,6 +123,7 @@ export const transactions = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     completedAt: timestamp("completed_at", { withTimezone: true }),
     failedAt: timestamp("failed_at", { withTimezone: true }),
+    failedReason: text("failed_reason"),
     completionAcknowledgedAt: timestamp("completion_acknowledged_at", { withTimezone: true }),
   },
   (table) => [
