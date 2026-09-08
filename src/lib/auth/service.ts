@@ -1,6 +1,6 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { db } from "../db";
-import { accounts, users } from "../db/schema";
+import { accounts, sessions, users } from "../db/schema";
 import type { UserRow, AccountRow, WalletRow } from "../db/schema";
 import { isUniqueViolation, type DbClient } from "../db/client";
 import { AppError, ErrorCodes } from "../errors";
@@ -147,4 +147,121 @@ export async function loadAccountForUser(client: DbClient, userId: string) {
     .where(and(eq(accounts.userId, userId)))
     .limit(1);
   return rows[0] ?? null;
+}
+
+/**
+ * Updates the authenticated user's profile. The user id is always derived
+ * server-side from the session; never from the client.
+ */
+export async function updateUserProfile(
+  userId: string,
+  input: { fullName: string },
+  ctx: AuditContext,
+): Promise<UserRow> {
+  const fullName = input.fullName.trim();
+  const [row] = await db
+    .update(users)
+    .set({ fullName, updatedAt: new Date() })
+    .where(eq(users.id, userId))
+    .returning();
+  if (!row) {
+    throw new AppError(404, ErrorCodes.AUTH_REQUIRED, "User not found.");
+  }
+
+  await writeAudit(db, AuditActions.account_updated, { userId, ipAddress: ctx.ipAddress, userAgent: ctx.userAgent }, {
+    resourceType: "user",
+    resourceId: userId,
+  });
+
+  return row;
+}
+
+/**
+ * Changes the authenticated user's password after verifying the current one.
+ * Uses the same Argon2id hashing as registration. Never logs or stores the
+ * password, and returns only generic errors.
+ */
+export async function changePassword(
+  userId: string,
+  input: { currentPassword: string; newPassword: string },
+  ctx: AuditContext,
+  opts?: { keepSessionId?: string | null },
+): Promise<void> {
+  const rows = await db
+    .select({ passwordHash: users.passwordHash })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  const user = rows[0] ?? null;
+  if (!user) {
+    throw new AppError(404, ErrorCodes.AUTH_REQUIRED, "User not found.");
+  }
+
+  const verified = await verifyPassword(input.currentPassword, user.passwordHash);
+  if (!verified) {
+    throw new AppError(
+      400,
+      ErrorCodes.INVALID_CREDENTIALS,
+      "Your current password is incorrect.",
+    );
+  }
+
+  const newHash = await hashPassword(input.newPassword);
+  await db.update(users).set({ passwordHash: newHash, updatedAt: new Date() }).where(eq(users.id, userId));
+
+  await writeAudit(db, AuditActions.password_changed, { userId, ipAddress: ctx.ipAddress, userAgent: ctx.userAgent }, {
+    resourceType: "user",
+    resourceId: userId,
+  });
+
+  // For safety, revoke any other sessions so other devices must re-authenticate
+  // with the new password. The session performing the change is kept.
+  await signOutOtherSessions(userId, opts?.keepSessionId ?? null, ctx);
+}
+
+/** A session row with any sensitive fields stripped for the client. */
+export type PublicSession = {
+  id: string;
+  createdAt: Date;
+  lastSeenAt: Date;
+  ipAddress: string | null;
+  userAgent: string | null;
+};
+
+/** Lists the user's sessions, newest first. Secrets are never returned. */
+export async function listUserSessions(userId: string): Promise<PublicSession[]> {
+  const rows = await db
+    .select({ id: sessions.id, createdAt: sessions.createdAt, lastSeenAt: sessions.lastSeenAt, ipAddress: sessions.ipAddress, userAgent: sessions.userAgent })
+    .from(sessions)
+    .where(eq(sessions.userId, userId))
+    .orderBy(sessions.lastSeenAt);
+  return rows;
+}
+
+/**
+ * Deletes every session belonging to the user except the one identified by
+ * currentSessionId (typically the session performing this action).
+ */
+export async function signOutOtherSessions(
+  userId: string,
+  currentSessionId: string | null,
+  ctx: AuditContext,
+): Promise<number> {
+  const deletion = await db
+    .delete(sessions)
+    .where(
+      and(
+        eq(sessions.userId, userId),
+        currentSessionId ? ne(sessions.id, currentSessionId) : undefined,
+      ),
+    )
+    .returning({ id: sessions.id });
+
+  if (deletion.length > 0) {
+    await writeAudit(db, AuditActions.session_invalidated, { userId, ipAddress: ctx.ipAddress, userAgent: ctx.userAgent }, {
+      resourceType: "session",
+      metadata: { count: deletion.length },
+    });
+  }
+  return deletion.length;
 }

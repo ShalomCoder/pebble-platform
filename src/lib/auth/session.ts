@@ -65,6 +65,23 @@ export async function deleteSession(token: string): Promise<void> {
   await db.delete(sessions).where(eq(sessions.tokenHash, hashSessionToken(token)));
 }
 
+/**
+ * Returns the id of the session whose plaintext token is currently stored in
+ * the request cookie, or null. Used to retain the current session when signing
+ * out other sessions.
+ */
+export async function getCurrentSessionId(): Promise<string | null> {
+  const store = await cookies();
+  const token = store.get(SESSION_COOKIE)?.value;
+  if (!token) return null;
+  const rows = await db
+    .select({ id: sessions.id })
+    .from(sessions)
+    .where(eq(sessions.tokenHash, hashSessionToken(token)))
+    .limit(1);
+  return rows[0]?.id ?? null;
+}
+
 /** Purges expired sessions (best-effort, called on login). */
 export async function purgeExpiredSessions(): Promise<void> {
   await db.delete(sessions).where(lte(sessions.expiresAt, new Date()));

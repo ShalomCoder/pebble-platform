@@ -6,6 +6,8 @@
  * any user-facing API. Metadata is kept free of sensitive secrets.
  */
 import { auditLogs } from "./db/schema";
+import { desc, eq } from "drizzle-orm";
+import { db } from "./db";
 import type { Db, TransactionDb } from "./db";
 
 export const AuditActions = {
@@ -13,6 +15,7 @@ export const AuditActions = {
   login_success: "login_success",
   login_failure: "login_failure",
   logout: "logout",
+  password_changed: "password_changed",
   session_invalidated: "session_invalidated",
   wallet_created: "wallet_created",
   transaction_created: "transaction_created",
@@ -67,4 +70,22 @@ export function auditContextFromRequest(request: Request): AuditContext {
     ipAddress: ip,
     userAgent: request.headers.get("user-agent"),
   };
+}
+
+export type AccountActivityItem = {
+  id: string;
+  action: string;
+  createdAt: Date;
+  ipAddress: string | null;
+};
+
+/** Recent security-relevant activity for the user, newest first. */
+export async function listAccountActivity(userId: string, limit = 20): Promise<AccountActivityItem[]> {
+  const rows = await db
+    .select({ id: auditLogs.id, action: auditLogs.action, createdAt: auditLogs.createdAt, ipAddress: auditLogs.ipAddress })
+    .from(auditLogs)
+    .where(eq(auditLogs.userId, userId))
+    .orderBy(desc(auditLogs.createdAt))
+    .limit(limit);
+  return rows;
 }
